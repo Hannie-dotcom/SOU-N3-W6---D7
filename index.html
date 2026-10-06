@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Soumatome N3 Kanji - Tuần 6 (Ngày 7)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background: linear-gradient(rgba(255, 245, 247, 0.75), rgba(240, 220, 225, 0.85)),
+                        url('https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 12px;
+            overflow-x: hidden;
+        }
+
+        .sakura-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .petal {
+            position: absolute; background: #ffb7c5; border-radius: 15px 0 15px 0; opacity: 0.75;
+            filter: drop-shadow(0 2px 4px rgba(216, 90, 127, 0.2)); animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translate(0, -10px) rotate(0deg); opacity: 0.8; }
+            100% { transform: translate(80px, 105vh) rotate(360deg); opacity: 0; }
+        }
+
+        .app-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 20px 16px;
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(180, 100, 120, 0.15);
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Tiêu đề Căn Giữa Dàn Đều */
+        .main-title-block {
+            text-align: center;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            border-bottom: 2px dashed #f2d5db;
+        }
+        .main-title-sub {
+            font-size: 11px;
+            color: #b06d7e;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .main-title-kanji {
+            color: #d85a7f;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #b06d7e; margin-bottom: 8px; }
+
+        /* Progress Bar */
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: #f2d5db;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #e07a9e, #d85a7f);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Setup Panel */
+        .setup-panel { display: flex; flex-direction: column; gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 13px; font-weight: 700; color: #d85a7f; }
+        select {
+            width: 100%; padding: 12px; border: 1.5px solid #f2d5db; border-radius: 12px;
+            font-size: 15px; outline: none; background: #fff5f7; color: #3a2e30; font-weight: 600;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: #fff5f7;
+            border-left: 4px solid #d85a7f;
+            padding: 24px 14px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .q-word { font-size: 32px; font-weight: 700; color: #3a2e30; word-break: break-all; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .opt-btn {
+            display: flex; align-items: center; justify-content: center; background: #ffffff;
+            border: 1.5px solid #f2d5db; color: #4a383b; padding: 14px 8px; border-radius: 12px;
+            font-size: 16px; font-weight: 700; cursor: pointer; text-align: center; line-height: 1.3;
+        }
+        .opt-btn:active { background: #fff0f3; border-color: #d85a7f; }
+        .opt-btn.correct { background: #e8f5e9 !important; border-color: #66bb6a !important; color: #2e7d32 !important; }
+        .opt-btn.wrong { background: #ffebee !important; border-color: #ef5350 !important; color: #c62828 !important; }
+
+        /* Explanation Box */
+        .explanation-box { background: #ffffff; border: 1px dashed #d85a7f; border-radius: 12px; padding: 12px; margin-top: 12px; }
+        .exp-title { font-size: 11px; font-weight: 700; color: #d85a7f; text-transform: uppercase; margin-bottom: 4px; }
+        .exp-detail { font-size: 15px; font-weight: 700; color: #3a2e30; margin-bottom: 6px; }
+        .exp-ex-jp { font-size: 14px; font-weight: 600; color: #d85a7f; margin-bottom: 2px; }
+        .exp-ex-vi { font-size: 13px; color: #666; line-height: 1.4; }
+
+        .feedback { display: none; margin-top: 14px; }
+        .btn-primary {
+            display: block; width: 100%; margin-top: 12px; background: linear-gradient(135deg, #e07a9e 0%, #d85a7f 100%);
+            color: white; border: none; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center;
+        }
+
+        /* Result Screen */
+        .result-panel { display: none; text-align: center; padding: 10px 0; }
+        .result-icon { font-size: 50px; margin-bottom: 10px; }
+        .result-score { font-size: 22px; font-weight: 700; color: #d85a7f; margin-bottom: 8px; }
+        .result-msg { font-size: 14px; color: #555; margin-bottom: 20px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div class="sakura-container" id="sakura-box"></div>
+
+    <div class="app-card">
+        <!-- Tiêu đề Căn Giữa Dàn Đều -->
+        <div class="main-title-block">
+            <div class="main-title-sub">SOUMATOME N3</div>
+            <div class="main-title-kanji">🌸 KANJI 🌸</div>
+        </div>
+
+        <!-- Panel Cài đặt -->
+        <div class="setup-panel" id="setup-panel">
+            <div style="text-align:center; font-weight:700; color:#b06d7e; font-size:16px;">Tuần 6 ・ Ngày 7 (Thực chiến & Tổng ôn)</div>
+            <div class="form-group">
+                <label>Số câu mỗi lượt</label>
+                <select id="select-count">
+                    <option value="10">10 câu</option>
+                    <option value="20" selected>20 câu</option>
+                    <option value="all">Tất cả (20 câu tổng hợp)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Dạng câu hỏi</label>
+                <select id="select-mode">
+                    <option value="kanji-to-reading">Kanji ➔ Cách đọc (Hiragana)</option>
+                    <option value="reading-to-kanji">Cách đọc (Hiragana) ➔ Kanji</option>
+                    <option value="mix" selected>Trộn 2 chiều ngẫu nhiên</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="startGame()">Bắt đầu luyện tập ➔</button>
+        </div>
+
+        <!-- Panel Làm bài -->
+        <div id="game-panel" style="display: none;">
+            <div class="header">
+                <span id="q-count">Câu 1 / 20</span>
+                <span id="score-count">Điểm: 0</span>
+            </div>
+
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+
+            <div class="question-card">
+                <div class="q-word" id="q-word">裁判</div>
+            </div>
+
+            <div class="options-grid" id="options-box"></div>
+
+            <div class="feedback" id="feedback">
+                <div id="result-status" style="font-weight: 700; text-align: center; font-size: 15px; margin-bottom: 8px;"></div>
+                <div class="explanation-box">
+                    <div class="exp-title">📌 Từ vựng & Đáp án chuẩn:</div>
+                    <div class="exp-detail" id="exp-detail"></div>
+                    <div class="exp-title">🌸 Ví dụ thực chiến trong sách:</div>
+                    <div class="exp-ex-jp" id="exp-ex-jp"></div>
+                    <div class="exp-ex-vi" id="exp-ex-vi"></div>
+                </div>
+                <button class="btn-primary" onclick="nextQuestion()">Câu tiếp theo ➔</button>
+            </div>
+        </div>
+
+        <!-- Panel Kết quả chúc mừng -->
+        <div class="result-panel" id="result-panel">
+            <div class="result-icon">🎉</div>
+            <div style="font-weight: 700; color: #3a2e30; font-size: 18px;">HOÀN THÀNH TUẦN 6!</div>
+            <div class="result-score" id="final-score">0 / 200 ĐIỂM</div>
+            <div class="result-msg" id="final-msg">Xuất sắc! Bạn đã vượt qua bài kiểm tra thực chiến Ngày 7 và hoàn thành trọn vẹn Tuần 6!</div>
+            <button class="btn-primary" onclick="resetSetup()">Luyện tập lại ↺</button>
+        </div>
+    </div>
+
+    <script>
+        function createPetal() {
+            const box = document.getElementById('sakura-box');
+            if(!box) return;
+            const p = document.createElement('div');
+            p.classList.add('petal');
+            p.style.width = Math.random() * 6 + 6 + 'px';
+            p.style.height = Math.random() * 8 + 8 + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = Math.random() * 3 + 5 + 's';
+            box.appendChild(p);
+            setTimeout(() => p.remove(), 8000);
+        }
+        setInterval(createPetal, 500);
+
+        // Dữ liệu chuẩn tổng hợp từ Bài tập Thực chiến Ngày 7 của PDF Soumatome N3 Kanji Tuần 6
+        const rawData = [
+            { kanji: "裁判", reading: "さいばん", hanviet: "TÀI PHÁN", meaning: "phiên tòa, xét xử", exJp: "裁判で証人が証言をする。", exVi: "Nhân chứng làm chứng tại phiên tòa." },
+            { kanji: "衝突", reading: "しょうとつ", hanviet: "XUNG ĐỘT", meaning: "va chạm, va đập", exJp: "交差点で車同士が衝突した。", exVi: "Hai xe ô tô đã va chạm với nhau tại ngã tư." },
+            { kanji: "不調", reading: "ふちょう", hanviet: "BẤT ĐIỀU", meaning: "không khỏe, trục trặc", exJp: "体調が不調なので病院へ行く。", exVi: "Vì cơ thể không khỏe nên tôi đi đến bệnh viện." },
+            { kanji: "逮捕", reading: "たいほ", hanviet: "ĐÃI BỔ", meaning: "bắt giữ", exJp: "警察が事件の容疑者を逮捕した。", exVi: "Cảnh sát đã bắt giữ nghi phạm của vụ án." },
+            { kanji: "経済", reading: "けいざい", hanviet: "KINH TẾ", meaning: "kinh tế", exJp: "大学で世界の経済を学ぶ。", exVi: "Học kinh tế thế giới ở đại học." },
+            { kanji: "被害者", reading: "ひがいしゃ", hanviet: "BỊ HẠI GIẢ", meaning: "nạn nhân, người bị hại", exJp: "事故の被害者を救急車で運ぶ。", exVi: "Vận chuyển nạn nhân của vụ tai nạn bằng xe cứu thương." },
+            { kanji: "検査", reading: "けんさ", hanviet: "KIỂM TÁ", meaning: "kiểm tra, xét nghiệm", exJp: "病院で定期的な健康検査を受ける。", exVi: "Khám/xét nghiệm kiểm tra sức khỏe định kỳ tại bệnh viện." },
+            { kanji: "驚く", reading: "おどろく", hanviet: "KINH", meaning: "ngạc nhiên", exJp: "予期しないニュースに驚いた。", exVi: "Tôi đã ngạc nhiên trước tin tức không ngờ tới." },
+            { kanji: "証明", reading: "しょうめい", hanviet: "CHỨNG MINH", meaning: "chứng minh", exJp: "自分の無実を証明する。", exVi: "Chứng minh sự vô tội của bản thân." },
+            { kanji: "情報", reading: "じょうほう", hanviet: "TÌNH BÁO", meaning: "thông tin", exJp: "正確な情報を入手する。", exVi: "Thu thập/có được thông tin chính xác." },
+            { kanji: "関節", reading: "かんせつ", hanviet: "QUAN TIẾT", meaning: "khớp xương", exJp: "熱のせいで足の関節が痛む。", exVi: "Khớp chân bị đau do sốt." },
+            { kanji: "履歴書", reading: "りれきしょ", hanviet: "LÝ LỊCH THƯ", meaning: "sơ yếu lý lịch, CV", exJp: "写真を入れた履歴書を送る。", exVi: "Gửi sơ yếu lý lịch có dán ảnh." },
+            { kanji: "注射", reading: "ちゅうしゃ", hanviet: "CHÚ XẠ", meaning: "tiêm, chích thuốc", exJp: "インフルエンザの予防注射を受ける。", exVi: "Tiêm phòng dịch cúm." },
+            { kanji: "政治", reading: "せいじ", hanviet: "CHÍNH TRỊ", meaning: "chính trị", exJp: "国の政治に関心を持つ。", exVi: "Quan tâm đến chính trị của đất nước." },
+            { kanji: "判断", reading: "はんだん", hanviet: "PHÁN ĐOÁN", meaning: "phán đoán, đánh giá", exJp: "状況を見て適切に判断する。", exVi: "Nắm bắt tình hình để đưa ra đánh giá phù hợp." },
+            { kanji: "お互いに", reading: "おたがいに", hanviet: "HỖ", meaning: "lẫn nhau", exJp: "お互いに感謝の気持ちを伝える。", exVi: "Trao cho nhau lời cảm ơn." },
+            { kanji: "育児", reading: "いくじ", hanviet: "DỤ NHI", meaning: "chăm con, nuôi dạy trẻ", exJp: "仕事と育児の両立を目指す。", exVi: "Hướng tới việc cân bằng giữa công việc và nuôi dạy con." },
+            { kanji: "頭痛", reading: "ずつう", hanviet: "ĐẦU THỐNG", meaning: "đau đầu", exJp: "頭痛がするので薬を飲む。", exVi: "Vì đau đầu nên tôi uống thuốc." },
+            { kanji: "証拠", reading: "しょうこ", hanviet: "CHỨNG CỨ", meaning: "bằng chứng, chứng cứ", exJp: "事件の証拠を警察に提出する。", exVi: "Nộp bằng chứng của vụ án cho cảnh sát." },
+            { kanji: "脈拍", reading: "みゃくはく", hanviet: "MẠCH PHÁCH", meaning: "nhịp mạch, mạch đập", exJp: "運動のあとに脈拍を測る。", exVi: "Đo nhịp mạch sau khi vận động." }
+        ];
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let canInteract = true;
+
+        function startGame() {
+            const countVal = document.getElementById('select-count').value;
+            const modeVal = document.getElementById('select-mode').value;
+
+            let list = [...rawData].sort(() => Math.random() - 0.5);
+            let selectedCount = countVal === 'all' ? list.length : parseInt(countVal);
+            list = list.slice(0, Math.min(selectedCount, list.length));
+
+            currentQuestions = list.map(item => {
+                let isKanjiToReading = modeVal === 'kanji-to-reading' ? true :
+                                       modeVal === 'reading-to-kanji' ? false :
+                                       Math.random() < 0.5;
+
+                return {
+                    raw: item,
+                    question: isKanjiToReading ? item.kanji : item.reading,
+                    answer: isKanjiToReading ? item.reading : item.kanji,
+                    isKanjiToReading: isKanjiToReading
+                };
+            });
+
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('setup-panel').style.display = 'none';
+            document.getElementById('game-panel').style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            canInteract = true;
+            document.getElementById('feedback').style.display = 'none';
+            const item = currentQuestions[currentIndex];
+
+            // Progress Bar & Count
+            const progressPercent = ((currentIndex) / currentQuestions.length) * 100;
+            document.getElementById('progress-fill').style.width = progressPercent + '%';
+            document.getElementById('q-count').innerText = `Câu ${currentIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('score-count').innerText = `Điểm: ${score}`;
+            document.getElementById('q-word').innerText = item.question;
+
+            const optionsBox = document.getElementById('options-box');
+            optionsBox.innerHTML = '';
+
+            let options = [item.answer];
+            while (options.length < 4) {
+                let randItem = rawData[Math.floor(Math.random() * rawData.length)];
+                let wrongAns = item.isKanjiToReading ? randItem.reading : randItem.kanji;
+                if (!options.includes(wrongAns) && wrongAns !== item.answer) {
+                    options.push(wrongAns);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(btn, opt === item.answer);
+                optionsBox.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, isCorrect) {
+            if (!canInteract) return;
+            canInteract = false;
+
+            const item = currentQuestions[currentIndex];
+            const statusEl = document.getElementById('result-status');
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                score += 10;
+                statusEl.innerHTML = `<span style="color: #4caf50;">✓ 正解 (Chính xác!)</span>`;
+            } else {
+                btn.classList.add('wrong');
+                statusEl.innerHTML = `<span style="color: #ef5350;">✕ ざんねん (Đáp án đúng là: ${item.answer})</span>`;
+            }
+
+            document.getElementById('exp-detail').innerText = `${item.raw.kanji} 【${item.raw.reading}】 : ${item.raw.meaning} (${item.raw.hanviet})`;
+            document.getElementById('exp-ex-jp').innerText = item.raw.exJp;
+            document.getElementById('exp-ex-vi').innerText = item.raw.exVi;
+            document.getElementById('score-count').innerText = `Điểm: ${score}`;
+            document.getElementById('feedback').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('progress-fill').style.width = '100%';
+            document.getElementById('game-panel').style.display = 'none';
+            document.getElementById('result-panel').style.display = 'block';
+            document.getElementById('final-score').innerText = `${score} / ${currentQuestions.length * 10} ĐIỂM`;
+        }
+
+        function resetSetup() {
+            document.getElementById('result-panel').style.display = 'none';
+            document.getElementById('setup-panel').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
